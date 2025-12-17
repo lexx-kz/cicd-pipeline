@@ -21,15 +21,17 @@ pipeline {
     }
 
     stage('Docker Push') {
-      steps {
-        sh '''docker.withRegistry(\'https://registry.hub.docker.com\', \'docker-hub-credentials\') {
-    // This tells Jenkins to use the \'mybuildimage\' we built earlier
-    // and push it to Docker Hub using the credentials provided
-    docker.image(\'lexxkz/mybuildimage\').push(\'latest\')
-}
-'''
+            environment {
+                
+                DOCKER_CREDS = credentials('docker-hub-credentials')
+            }
+            steps {
+                sh '''              
+                echo "$DOCKER_CREDS_PSW" | docker login -u "$DOCKER_CREDS_USR" --password-stdin
+                
+                docker push lexxkz/mybuildimage
+                '''
+            }
         }
-      }
-
     }
-  }
+}
