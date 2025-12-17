@@ -14,5 +14,11 @@ pipeline {
       }
     }
 
+    stage('Docker Build') {
+      steps {
+        sh 'docker build -t lexxkz/mybuildimage'
+      }
+    }
+
   }
 }
